@@ -68,7 +68,7 @@ export class Game {
 
   //game data
   level = ref(0)
-  health = ref(100)
+  health = ref(30)
   #player = new Player()
   #enemies = new Set<Enemy>()
   #attacked = new Set<Enemy>()
