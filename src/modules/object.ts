@@ -41,7 +41,7 @@ export class GameObject {
 
   // Attack
   attackDamage = 10;
-  attackCooldown = 1000;
+  attackCooldown = 2000;
   attack(): number | undefined {
     if (!this.timers.ready("attack")) return;
     this.timers.record("attack", this.attackCooldown);

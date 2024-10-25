@@ -11,7 +11,7 @@ export class Enemy extends GameObject {
     super([97, 64], new SingleTexture(EnemyImage));
     this.setPosition(position);
 
-    this.timers.record("attack", Math.random() * this.attackCooldown);
+    this.timers.record("attack", (Math.random() / 2 + .5) * this.attackCooldown);
 
     const healthBar = (() => {
       const size = [this.size[0] / 20 * this.health, 4] as [number, number];
@@ -31,7 +31,7 @@ export class Enemy extends GameObject {
     if (!this.timers.ready("damaged")) this.renderFilter = "brightness(50%)";
 
     const attackLeft = this.timers.get("attack");
-    if (attackLeft <= 500) this.renderFilter = `brightness(${1 + (1 - attackLeft / 500)})`;
+    if (attackLeft <= 300) this.renderFilter = `brightness(${1 + (1 - attackLeft / 500)})`;
 
     this.views[0].size[0] = this.size[0] / 20 * this.health;
   }
