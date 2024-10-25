@@ -46,6 +46,7 @@ export class Render {
       this.ctx.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height, x, y, object.size[0], object.size[1]);
       lastFilter = object.filter;
     }
+    if (lastFilter !== "") ctx.filter = "none";
   }
   drawBackground(delta: number, viewport: ViewPort) {
     const background = viewport.getBackground();
