@@ -1,6 +1,6 @@
 import { ObjectView } from "@/modules/render";
 import { GameObject } from "@/modules/object";
-import EnemyImage from "@bitmaps/enemy.webp";
+import EnemyImage from "@bitmaps/enemy.png";
 import { SingleTexture } from "@/modules/texture";
 
 export class Enemy extends GameObject {
@@ -8,7 +8,7 @@ export class Enemy extends GameObject {
   destoryed = false;
 
   constructor(position: [number, number]) {
-    super([64, 64], new SingleTexture(EnemyImage));
+    super([97, 64], new SingleTexture(EnemyImage));
     this.setPosition(position);
 
     this.timers.record("attack", Math.random() * this.attackCooldown);

@@ -1,11 +1,11 @@
 import { SingleTexture } from "@/modules/texture";
 import { GameObject } from "@/modules/object";
-import EnemyImage from "@bitmaps/player.png";
+import PlayerImage from "@bitmaps/player.png";
 
 export class Player extends GameObject {
   health = 30;
   constructor() {
-    super([16, 80], new SingleTexture(EnemyImage));
+    super([110, 80], new SingleTexture(PlayerImage));
     this.zIndex = 100;
   }
 

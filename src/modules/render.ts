@@ -1,6 +1,6 @@
 import { GameObject } from "./object";
-import DefaultImage from "@bitmaps/default.webp";
-import BackgroundImage from "@bitmaps/background.webp";
+import BackgroundImage from "@bitmaps/background.png";
+import { SingleTexture, Texture } from "./texture";
 
 export class Render {
   // 畫布
@@ -160,22 +160,4 @@ export class ObjectView {
       ), ...object.views];
   }
 
-}
-
-export interface Texture {
-  getBitmap(delta: number): ImageBitmap | undefined;
-}
-
-export class SingleTexture implements Texture {
-  bitmap: ImageBitmap | undefined;
-  constructor(url: string) {
-    const image = new Image();
-    image.onload = () =>
-      createImageBitmap(image).then(bitmap => this.bitmap = bitmap);
-    image.src = url;
-  }
-  getBitmap() {
-    return this.bitmap;
-  }
-  static default = new SingleTexture(DefaultImage);
 }
