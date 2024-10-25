@@ -46,3 +46,19 @@ body {
     --background: #f5f5f5;
   }
 }
+
+button {
+  margin: 0;
+  border: none;
+  display: block;
+  font-size: 16px;
+  padding: 0.2em 1em;
+  border-radius: .2em;
+  color: var(--color);
+  background: var(--background);
+
+  &:hover {
+    filter: brightness(.8);
+  }      
+
+}

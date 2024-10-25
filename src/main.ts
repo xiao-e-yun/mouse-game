@@ -5,6 +5,7 @@ import { Controller } from './modules/controller'
 import { Render, ViewPort } from './modules/render'
 import { Player } from './objects/player'
 import { Enemy } from './objects/enemy'
+import { Timer as Timers } from './modules/object'
 
 createApp(App).mount('#ui')
 
@@ -13,42 +14,43 @@ export class Game {
   prepare() {
   }
 
-  run(delta = 0) {
+  runMain(delta = 0, mouse: [number, number]) {
 
-    // request next frame
-    if (!this.prepareNextFrame(delta)) return
-
-     // level 
-    if (this.#enemies.size===0){
+    // level 
+    if (this.#enemies.size === 0) {
       const level = ++this.level.value
-      const places = new Array(16*9).fill(0).map((_,i)=>[i%16-8,Math.floor(i/16)-4.5])
+      const places = new Array(16 * 9).fill(0).map((_, i) => [i % 16 - 8, Math.floor(i / 16) - 4.5])
       for (let i = 0; i < level * 2; i++) {
         const placesLeft = places.length
-        const place = places.splice(Math.floor(placesLeft * Math.random()),1)[0]
+        const place = places.splice(Math.floor(placesLeft * Math.random()), 1)[0]
         const offsetX = 32 + Math.random() * (100 - 64)
         const offsetY = 32 + Math.random() * (100 - 64)
         const x = offsetX + place[0] * 100
-        const y = offsetY + place[1] * 100 
+        const y = offsetY + place[1] * 100
         this.#enemies.add(new Enemy([x, y]))
       }
     }
 
-    const mousePos = this.render.mapFromScreen(this.controller.mouse)
-    this.#player.position = this.viewport.mapToViewport(mousePos)
+    this.#player.position = mouse
     this.health.value = this.#player.health
     this.#player.next(delta)
     this.viewport.add(this.#player)
 
+
+    let combat = this.combat.value
     const newAttacked = new Set<Enemy>()
     for (const enemy of this.#enemies) {
       enemy.next(delta)
 
       const attack = enemy.attack()
-      
+
       if (this.#player.collision(enemy)) {
         newAttacked.add(enemy)
-        if (!this.#attacked.has(enemy))
+        if (!this.#attacked.has(enemy)) {
           enemy.damaged(10)
+          combat += 1
+          this.timers.record("combat", 3000)
+        }
 
         if (attack) {
           this.#player.damaged(attack)
@@ -62,16 +64,19 @@ export class Game {
     }
     this.#attacked = newAttacked
 
-    this.render.draw(delta, this.viewport)
-
+    this.combat.value = !this.timers.ready("combat") ? combat : 0
+    this.maxCombat = Math.max(this.maxCombat, combat)
   }
 
   //game data
   level = ref(0)
   health = ref(30)
+  combat = ref(0)
+  maxCombat = 0
   #player = new Player()
   #enemies = new Set<Enemy>()
   #attacked = new Set<Enemy>()
+  timers = new Timers()
 
   //game process meta
   paused = ref(false)
@@ -83,6 +88,18 @@ export class Game {
     private render: Render,
   ) {
 
+  }
+
+  run(delta = 0) {
+    // request next frame
+    if (!this.prepareNextFrame(delta)) return
+
+    const mousePos = this.render.mapFromScreen(this.controller.mouse)
+    const mouse = this.viewport.mapToViewport(mousePos)
+    this.runMain(delta, mouse)
+
+    this.render.draw(delta, this.viewport)
+    this.timers.tick(delta)
   }
 
   prepareNextFrame(delta: number) {
@@ -113,6 +130,7 @@ export class Game {
   }
 
   stop() {
+    if (!this.isRunning) return
     this.running.value = false
     this.render.clear()
   }

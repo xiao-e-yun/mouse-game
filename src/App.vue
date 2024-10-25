@@ -21,6 +21,7 @@ function startGame() {
 }
 
 function stopGame() {
+  if (game.value) game.value!.stop();
   game.value = undefined;
   audio.currentTime = 0;
   audio.pause();
@@ -32,27 +33,54 @@ function restartGame() {
 }
 
 watch(() => game.value && game.value.health.value, (health) => {
-  if (health !== undefined && health <= 0) game.value!.stop()
+  if (health === undefined || health > 0) return
+  game.value!.stop()
+  audio.pause()
 })
 </script>
 
 <template>
   <div class="page" v-if="!game">
-    <h1 class="title">Game</h1>
+    <h1>Game</h1>
     <div class="menu"><button @click="startGame">Start</button></div>
   </div>
   <div v-else-if="game.health.value > 0" class="game">
     <div class="menu-bar">
-      <button @click="game.togglePause">{{ game.isPaused ? 'Resume' : 'Pause' }}</button>
+      <button @click="game.togglePause">Pause</button>
     </div>
     <div class="info-bar">
-      <span><img class="image-label" src="/heart.png"><span class="slider"><span
-            :style="`--width: ${game.health.value / 30 * 100}%`" /></span></span>
+      <span>
+        <img class="image-label" src="/heart.png">
+        <span class="slider"><span :style="`--width: ${game.health.value / 30 * 100}%`" /></span>
+      </span>
       <span>Level: {{ game.level.value }}</span>
     </div>
+
+    <div class="combat" v-if="game.combat.value">
+      <h2>{{ game.combat.value }}</h2>
+      <span class="slider"><span :key="game.combat.value" /></span>
+    </div>
+
+    <div class="page settings-outter" v-if="game.isPaused">
+      <div class="settings">
+        <h1>Menu</h1>
+        <div>
+          <label>Volume</label>
+          <input type="range" min="0" max="1" step="0.1" v-model="audio.volume" />
+        </div>
+        <div class="btns">
+          <button @click="stopGame">Back</button>
+          <button @click="restartGame">Restart</button>
+          <button @click="game.togglePause">Resume</button>
+        </div>
+      </div>
+    </div>
+
   </div>
   <div class="page" v-else>
-    <h1 class="title">Game Over</h1>
+    <h1>Game Over</h1>
+    <p>Last Level: {{ game.level.value }}</p>
+    <p>Max Combat: {{ game.maxCombat }}</p>
     <div class="menu">
       <button @click="restartGame">Restart</button>
       <button @click="stopGame">Back</button>
@@ -61,23 +89,26 @@ watch(() => game.value && game.value.health.value, (health) => {
 </template>
 
 <style lang="scss" scoped>
-.title {
-  text-align: center;
-}
-
-.menu {
-  gap: 1rem;
-  margin: auto;
-  display: flex;
-  width: fit-content;
-  flex-direction: column;
-
-  &>button {
-    padding: 0.2em 1em;
-  }
-}
-
 .game {
+
+
+  & .settings-outter {
+    backdrop-filter: blur(5px);
+    background: #111a;
+  }
+
+  & .settings {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    & .btns {
+      display: flex;
+      gap: 1em;
+    }
+  }
+
   .menu-bar {
     position: fixed;
     padding: .5em;
@@ -89,19 +120,8 @@ watch(() => game.value && game.value.health.value, (health) => {
     flex-direction: column;
 
     & button {
-      margin: 0;
-      border: none;
-      display: block;
-      font-size: 16px;
       padding: .5em;
-      border-radius: .2em;
-      background: var(--background);
-
-      &:hover {
-        filter: brightness(.8);
-      }
     }
-
   }
 
   .info-bar {
@@ -118,6 +138,7 @@ watch(() => game.value && game.value.health.value, (health) => {
       background: var(--background);
       padding: .2em .5em;
     }
+
 
     & .slider {
       padding: 0;
@@ -139,6 +160,49 @@ watch(() => game.value && game.value.health.value, (health) => {
     }
   }
 
+  .combat {
+    display: flex;
+    flex-direction: column;
+    transform: translate(-50%, 0);
+    color: var(--danger);
+    position: fixed;
+    left: 50%;
+
+    & h2 {
+      text-align: center;
+      font-size: 2em;
+      margin: 0;
+    }
+
+    & .slider {
+      width: 5em;
+      height: .5em;
+      overflow: hidden;
+      border-radius: .5em;
+      display: inline-block;
+      background: var(--color);
+
+      & span {
+        width: 100%;
+        height: 100%;
+        display: block;
+        background: var(--danger);
+        animation: left 3s linear;
+  
+        @keyframes left {
+          0% {
+            width: 100%;
+          }
+  
+          100% {
+            width: 0;
+          }
+        }
+      }
+    }
+
+
+  }
 
   & .image-label {
     top: 0;
@@ -153,7 +217,23 @@ watch(() => game.value && game.value.health.value, (health) => {
 }
 
 .page {
+  top: 0;
   width: 100vw;
   height: 100vh;
+  position: fixed;
+  text-align: center;
+
+  & .menu {
+    gap: 1rem;
+    margin: auto;
+    display: flex;
+    width: fit-content;
+    flex-direction: column;
+
+    & button {
+      border: var(--color) 2px solid;
+      padding: 0.2em 1em;
+    }
+  }
 }
 </style>
