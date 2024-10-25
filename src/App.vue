@@ -9,22 +9,15 @@ const controller = new Controller();
 const render = new Render();
 const game = shallowRef<Game>();
 
-const audio = new Audio('/bgm.mp3');
-audio.volume = 0.5;
-audio.loop = true;
-
 // main
 function startGame() {
   game.value = new Game(controller, render);
   game.value.start();
-  audio.currentTime = 1.5;
-  audio.play();
 }
 
 function stopGame() {
   if (game.value) game.value!.stop();
   game.value = undefined;
-  audio.pause();
 }
 
 function restartGame() {
@@ -60,7 +53,7 @@ function restartGame() {
         <h1>Menu</h1>
         <div>
           <label>Volume</label>
-          <input type="range" min="0" max="1" step="0.1" v-model="audio.volume" />
+          <input type="range" min="0" max="1" step="0.1" v-model="game.audio.volume" />
         </div>
         <div class="btns">
           <button @click="stopGame">Back</button>
@@ -182,12 +175,12 @@ function restartGame() {
         display: block;
         background: var(--danger);
         animation: left 3s linear;
-  
+
         @keyframes left {
           0% {
             width: 100%;
           }
-  
+
           100% {
             width: 0;
           }

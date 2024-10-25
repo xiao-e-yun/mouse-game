@@ -1,7 +1,7 @@
 import { Game } from "@/main";
 import { Enemy } from "../enemy";
-import { SingleTexture } from "@/modules/texture";
-import FireManImage from "@bitmaps/default.webp";
+import { AnimationTexture } from "@/modules/texture";
+import DogImage from "@bitmaps/enemies/dog.webp";
 
 export class Dog extends Enemy {
   speed = 150;
@@ -9,7 +9,7 @@ export class Dog extends Enemy {
     super(game, {
       position,
       size: [84, 84],
-      texture: new SingleTexture(FireManImage),
+      texture: new AnimationTexture(DogImage,[512, 512], 30, 5),
       
       health: 15,
       damage: 5,

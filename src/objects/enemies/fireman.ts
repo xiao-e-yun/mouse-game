@@ -3,14 +3,14 @@ import { Enemy } from "../enemy";
 import { Timer } from "@/modules/utils";
 import { FireBall } from "../bullets/fireball";
 import { SingleTexture } from "@/modules/texture";
-import FireManImage from "@bitmaps/default.webp";
+import FireManImage from "@bitmaps/enemies/fireman.png";
 
 export class FireMan extends Enemy {
   skill = new Timer(2000);
   constructor(game: Game, position: [number, number]) {
     super(game, {
       position,
-      size: [84, 84],
+      size: [80, 84],
       texture: new SingleTexture(FireManImage),
       
       health: 30,

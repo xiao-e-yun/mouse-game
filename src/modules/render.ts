@@ -38,13 +38,15 @@ export class Render {
     for (const object of objects) {
       object.texture.getBitmap(delta);
       const bitmap = object.texture.getBitmap(delta);
+      const [bitmapX,bitmapY] = object.texture.position();
+      const [bitmapW,bitmapH] = object.texture.size();
       if (!bitmap) continue;
       const x = object.position[0] - object.size[0] / 2;
       const y = object.position[1] - object.size[1] / 2;
 
       const filters = object.filters.join(" ");
       if (lastFilter !== filters) ctx.filter = filters || "none";
-      this.ctx.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height, x, y, object.size[0], object.size[1]);
+      this.ctx.drawImage(bitmap, bitmapX, bitmapY, bitmapW, bitmapH, x, y, object.size[0], object.size[1]);
       lastFilter = filters;
     }
     if (lastFilter !== "") ctx.filter = "none";

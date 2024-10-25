@@ -79,8 +79,9 @@ export class AnimationTexture implements Texture {
 
   getBitmap(delta: number): ImageBitmap | undefined {
     this.time += delta;
-    this.frame = Math.floor(this.time / 1000 * this.fps) % this.frames;
-    this.time %= 1000 / this.fps;
+    const oneFrame = 1000 / this.fps;
+    this.frame = Math.floor(this.time / oneFrame + this.frame) % this.frames;
+    this.time %= oneFrame;
     return this.bitmap;
   }
 

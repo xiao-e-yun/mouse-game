@@ -7,7 +7,7 @@ import { Player } from './objects/player'
 import { Enemy } from './objects/enemy'
 import { Timers } from './modules/utils'
 import { Bullet } from './objects/bullet'
-import { FireMan } from './objects/enemies/fire_man'
+import { FireMan } from './objects/enemies/fireman'
 import { Slime } from './objects/enemies/slime'
 import { Dog } from './objects/enemies/dog'
 
@@ -65,6 +65,7 @@ export class Game {
   idRecord = 0
   paused = ref(false)
   running = ref(false)
+  audio = new Audio('/bgm.mp3')
   viewport = new ViewPort([1600, 900]);
 
   constructor(
@@ -125,6 +126,10 @@ export class Game {
 
   start() {
     this.running.value = true
+    this.audio.currentTime = 1.5;
+    this.audio.volume = 0.5
+    this.audio.loop = true
+    this.audio.play()
     this.prepare()
     this.run()
   }
@@ -132,6 +137,7 @@ export class Game {
   stop() {
     if (!this.isRunning) return
     this.running.value = false
+    this.audio.pause()
     this.render.clear()
   }
 
