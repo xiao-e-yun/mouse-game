@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { shallowRef, watch } from 'vue';
+import { shallowRef } from 'vue';
 import { Game } from './main';
 import { Controller } from './modules/controller';
 import { Render } from './modules/render';
