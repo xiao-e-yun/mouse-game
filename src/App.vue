@@ -9,14 +9,21 @@ const controller = new Controller();
 const render = new Render();
 const game = shallowRef<Game>();
 
+const audio = new Audio('/bgm.mp3');
+audio.loop = true;
+
 // main
 function startGame() {
   game.value = new Game(controller, render);
   game.value.start();
+  audio.currentTime = 1.5;
+  audio.play();
 }
 
 function stopGame() {
   game.value = undefined;
+  audio.currentTime = 0;
+  audio.pause();
 }
 
 function restartGame() {
@@ -39,7 +46,8 @@ watch(() => game.value && game.value.health.value, (health) => {
       <button @click="game.togglePause">{{ game.isPaused ? 'Resume' : 'Pause' }}</button>
     </div>
     <div class="info-bar">
-      <span>Health: <span class="slider"><span :style="`--width: ${game.health.value / 30 * 100}%`" /></span></span>
+      <span><img class="image-label" src="/heart.png"><span class="slider"><span
+            :style="`--width: ${game.health.value / 30 * 100}%`" /></span></span>
       <span>Level: {{ game.level.value }}</span>
     </div>
   </div>
@@ -93,6 +101,7 @@ watch(() => game.value && game.value.health.value, (health) => {
         filter: brightness(.8);
       }
     }
+
   }
 
   .info-bar {
@@ -128,6 +137,18 @@ watch(() => game.value && game.value.health.value, (health) => {
         background: var(--danger);
       }
     }
+  }
+
+
+  & .image-label {
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 3em;
+    height: 3em;
+    position: absolute;
+    image-rendering: pixelated;
+    transform: translate(-25%, 0);
   }
 }
 
