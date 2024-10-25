@@ -54,16 +54,18 @@ export class Render {
     const bitmap = background.getBitmap(delta);
     if (!bitmap) return;
 
-    const pattern = this.ctx.createPattern(bitmap, "repeat");
-    if (!pattern) return;
-
     const x = viewport.position[0] - viewport.size[0] / 2;
     const y = viewport.position[1] - viewport.size[1] / 2;
 
-    this.ctx.rect(x, y, viewport.size[0], viewport.size[1]);
+    this.ctx.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height, x, y, viewport.size[0], viewport.size[1]);
+    
+    // const pattern = this.ctx.createPattern(bitmap, "repeat");
+    // if (!pattern) return;
+
     // this.ctx.rect(x, y, viewport.size[0], viewport.size[1]);
-    this.ctx.fillStyle = pattern;
-    this.ctx.fill();
+    // // this.ctx.rect(x, y, viewport.size[0], viewport.size[1]);
+    // this.ctx.fillStyle = pattern;
+    // this.ctx.fill();
   }
   // absolute position => relative position (-1~1)
   mapFromScreen([x, y]: [number, number]): [number, number, number] {
@@ -103,7 +105,7 @@ export class ViewPort {
 
   flush() {
     const objects = this.objects.map(object => ObjectView.fromGameObject(object)).flat();
-    
+
     objects.sort((a, b) => {
       //sort by z-index
       const zIndex = a.zIndex - b.zIndex;
