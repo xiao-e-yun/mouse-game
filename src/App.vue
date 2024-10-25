@@ -30,7 +30,7 @@ watch(() => game.value && game.value.health.value, (health) => {
 </script>
 
 <template>
-  <div v-if="!game">
+  <div class="page" v-if="!game">
     <h1 class="title">Game</h1>
     <div class="menu"><button @click="startGame">Start</button></div>
   </div>
@@ -43,7 +43,7 @@ watch(() => game.value && game.value.health.value, (health) => {
       <span>Level: {{ game.level.value }}</span>
     </div>
   </div>
-  <div v-else>
+  <div class="page" v-else>
     <h1 class="title">Game Over</h1>
     <div class="menu">
       <button @click="restartGame">Restart</button>
@@ -129,5 +129,10 @@ watch(() => game.value && game.value.health.value, (health) => {
       }
     }
   }
+}
+
+.page {
+  width: 100vw;
+  height: 100vh;
 }
 </style>
