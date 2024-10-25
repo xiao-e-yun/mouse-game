@@ -1,56 +1,51 @@
-import { ObjectView } from "./render";
-import { SingleTexture, Texture } from "./texture";
+import { RenderObject } from "./render";
+import { Texture } from "./texture";
+import { System } from "@/systems";
+import { Game } from "@/main";
 
 export class GameObject {
-  position = [NaN, NaN] as [number, number];
-  size = [NaN, NaN] as [number, number];
-  texture: Texture
-  health = 1;
-  renderFilter = "";
-  zIndex = 0;
-  views: ObjectView[] = [];
-
+  id: number;
   destoryed = false;
-  timers = new Timer;
+  view: GameObjectView;
+  #systems: Map<string, System> = new Map();
 
-  constructor(size: [number, number], texture: Texture = SingleTexture.default) {
-    this.size = size;
-    this.texture = texture;
+  constructor(game: Game, options: GameObjectOptions) {
+    this.id = game.idRecord++; // Unique id
+
+    const view = options.view ?? {};
+    this.view = new GameObjectView(
+      options.position,
+      options.size,
+      options.texture,
+      view.zIndex ?? 0,
+      view.filters ?? []
+    );
+
   }
 
   next(delta: number): void {
-    this.timers.tick(delta);
+    for (const system of this.#systems.values())
+      system.next(delta)
   }
 
-  setPosition(position: [number, number]) {
-    this.position = position;
-  }
-
-  setSize(size: [number, number]) {
-    this.size = size;
-  }
-
-  //
-  invincibleTime = 200;
-  damaged(damage: number) {
-    if (!this.timers.ready("damaged")) return
-    this.health -= damage;
-    this.timers.record("damaged", this.invincibleTime);
-    if (this.health <= 0) this.destroy();
-  }
-
-  // Attack
-  attackDamage = 10;
-  attackCooldown = 2000;
-  attack(): number | undefined {
-    if (!this.timers.ready("attack")) return;
-    this.timers.record("attack", this.attackCooldown);
-    return this.attackDamage;
-  }
-
-  //
-  destroy() {
+  destory() {
     this.destoryed = true;
+  }
+
+  get position(): [number, number] {
+    return this.view.position;
+  }
+
+  set position(position: [number, number]) {
+    this.view.position = position;
+  }
+
+  get size(): [number, number] {
+    return this.view.size;
+  }
+
+  set size(size: [number, number]) {
+    this.view.size = size;
   }
 
   // AABB collision detection
@@ -62,22 +57,86 @@ export class GameObject {
 
     return Math.abs(x1 - x2) < (w1 + w2) / 2 && Math.abs(y1 - y2) < (h1 + h2) / 2;
   }
+
+  setSystems(systems: System[]) {
+    for (const system of systems)
+      this.addSystem(system)
+  }
+
+  addSystem<T extends System>(system: T) {
+    const name = system.constructor.name;
+    if (this.#systems.has(name))
+      throw new Error(`System ${name} already exists, when adding to ${this.constructor.name}`);
+    this.#systems.set(name, system);
+  }
+
+  getSystem<T extends System>(type: new (...args: any[]) => T): T | undefined {
+    return this.#systems.get(type.name) as T;
+  }
 }
 
-export class Timer {
-  inner = new Map<string, number>();
-  tick(delta: number) {
-    for (const [name, time] of this.inner) {
-      this.inner.set(name, time - delta);
-    }
+
+export class GameObjectView {
+  effects: [number, RenderObject[]][] = [];
+  subObjects: Map<string, RenderObject[]> = new Map();
+
+  constructor(
+    public position: [number, number],
+    public size: [number, number],
+    public texture: Texture,
+    public zIndex: number,
+    public filters: string[],
+  ) {
+
   }
-  record(name: string, time: number) {
-    this.inner.set(name, time);
+
+  next(delta: number) {
+    this.effects = this.effects.filter(timeAndEffect => {
+      timeAndEffect[0] -= delta;
+      return timeAndEffect[0] > 0;
+    });
   }
-  ready(name: string) {
-    return this.get(name)! <= 0;
+
+  getMain(): RenderObject {
+    return new RenderObject(this.position, this.size, this.texture)
+      .setIndex(this.zIndex)
+      .setFilter(this.filters);
   }
-  get(name: string) {
-    return this.inner.get(name) ?? 0;
+
+  addEffect(effects: RenderObject[], keepTime: number) {
+    this.effects.push([keepTime, effects]);
+  }
+
+  getEffects(): RenderObject[] {
+    return this.effects.flatMap(([_, effect]) => effect);
+  }
+
+  setSubObjects(name: string, objects: RenderObject[]) {
+    this.subObjects.set(name, objects);
+  }
+
+  getSubObjects(): RenderObject[] {
+    return Array.from(this.subObjects.values()).flat();
+  }
+
+  removeSubObjects(name: string) {
+    this.subObjects.delete(name);
+  } 
+
+  toRenderObject(): RenderObject[] {
+    return [
+      this.getMain(),
+      ...this.getEffects(),
+      ...this.getSubObjects()
+    ]
+  }
+}
+export interface GameObjectOptions {
+  position: [number, number];
+  size: [number, number];
+  texture: Texture;
+  view?: {
+    zIndex?: number;
+    filters?: string[];
   }
 }

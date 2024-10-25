@@ -10,6 +10,7 @@ const render = new Render();
 const game = shallowRef<Game>();
 
 const audio = new Audio('/bgm.mp3');
+audio.volume = 0.5;
 audio.loop = true;
 
 // main
@@ -23,7 +24,6 @@ function startGame() {
 function stopGame() {
   if (game.value) game.value!.stop();
   game.value = undefined;
-  audio.currentTime = 0;
   audio.pause();
 }
 
@@ -31,12 +31,6 @@ function restartGame() {
   stopGame();
   startGame();
 }
-
-watch(() => game.value && game.value.health.value, (health) => {
-  if (health === undefined || health > 0) return
-  game.value!.stop()
-  audio.pause()
-})
 </script>
 
 <template>
@@ -51,14 +45,14 @@ watch(() => game.value && game.value.health.value, (health) => {
     <div class="info-bar">
       <span>
         <img class="image-label" src="/heart.png">
-        <span class="slider"><span :style="`--width: ${game.health.value / 30 * 100}%`" /></span>
+        <span class="slider"><span :style="`--width: ${game.health.value * 100}%`" /></span>
       </span>
       <span>Level: {{ game.level.value }}</span>
     </div>
 
-    <div class="combat" v-if="game.combat.value">
-      <h2>{{ game.combat.value }}</h2>
-      <span class="slider"><span :key="game.combat.value" /></span>
+    <div class="combat" v-if="game.combats.value">
+      <h2>{{ game.combats.value }}</h2>
+      <span class="slider"><span :key="game.combats.value" /></span>
     </div>
 
     <div class="page settings-outter" v-if="game.isPaused">

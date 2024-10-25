@@ -1,38 +1,56 @@
-import { ObjectView } from "@/modules/render";
 import { GameObject } from "@/modules/object";
-import EnemyImage from "@bitmaps/enemy.png";
-import { SingleTexture } from "@/modules/texture";
+import { Texture } from "@/modules/texture";
+import { Game } from "@/main";
+import { AttackSystem, AttackTarget } from "../systems/attack";
+import { HealthSystem } from "../systems/health";
+import { RenderObject } from "@/modules/render";
 
 export class Enemy extends GameObject {
-  health = 20;
-  destoryed = false;
+  attackSystem: AttackSystem;
+  healthSystem: HealthSystem;
+  healthBar: RenderObject;
+  constructor(protected game: Game, options: {
+    position: [number, number],
+    size: [number, number],
+    damage: number,
+    cooldown: number,
+    texture: Texture,
+    health: number,
+  }) {
+    super(game, {
+      position: options.position,
+      texture: options.texture,
+      size: options.size,
+    });
 
-  constructor(position: [number, number]) {
-    super([97, 64], new SingleTexture(EnemyImage));
-    this.setPosition(position);
+    this.attackSystem = new AttackSystem(game, this, { targets: AttackTarget.Player, damage: options.damage, cooldown: options.cooldown });
+    this.healthSystem = new HealthSystem(this, { value: options.health, invincible: 200 });
 
-    this.timers.record("attack", (Math.random() / 2 + .5) * this.attackCooldown);
+    this.setSystems([
+      this.attackSystem,
+      this.healthSystem,
+    ])
 
-    const healthBar = (() => {
-      const size = [this.size[0] / 20 * this.health, 4] as [number, number];
-      const position = [this.position[0], this.position[1] + this.size[1] / 2 + 8] as [number, number];
-      const texture = new SingleTexture(`data:image/webp;base64,UklGRjwAAABXRUJQVlA4IDAAAADQAQCdASoIAAgAAgA0JaACdLoB+AADsAD+8Oj3/yC5YXXI1/8gP+MqfGVP+PIAAAA=`)
-      return new ObjectView(size, position, texture, this.zIndex, "")
-    })()
-
-    this.views = [healthBar]
+    this.healthBar = this.healthSystem.getHealthBar()
+    this.view.setSubObjects("healthBar", [this.healthBar]);
   }
 
   override next(delta: number): void {
     super.next(delta);
 
-    this.renderFilter = "";
+    let filter = "";
 
-    if (!this.timers.ready("damaged")) this.renderFilter = "brightness(50%)";
+    if (this.healthSystem.isInvincible()) filter = "brightness(50%)";
 
-    const attackLeft = this.timers.get("attack");
-    if (attackLeft <= 300) this.renderFilter = `brightness(${1 + (1 - attackLeft / 500)})`;
+    const attackLeft = this.attackSystem.cooldown!.get();
+    if (attackLeft <= 300) {
+      filter = `brightness(${1 + (1 - attackLeft / 300)})`;
+    }
 
-    this.views[0].size[0] = this.size[0] / 20 * this.health;
+    this.view.filters = [filter];
+
+    const [position, size] = this.healthSystem.getHealthBarPlace();
+    this.healthBar.setPosition(position);
+    this.healthBar.setSize(size);
   }
 }

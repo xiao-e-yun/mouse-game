@@ -42,9 +42,10 @@ export class Render {
       const x = object.position[0] - object.size[0] / 2;
       const y = object.position[1] - object.size[1] / 2;
 
-      if (lastFilter !== object.filter) ctx.filter = object.filter || "none";
+      const filters = object.filters.join(" ");
+      if (lastFilter !== filters) ctx.filter = filters || "none";
       this.ctx.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height, x, y, object.size[0], object.size[1]);
-      lastFilter = object.filter;
+      lastFilter = filters;
     }
     if (lastFilter !== "") ctx.filter = "none";
   }
@@ -104,7 +105,7 @@ export class ViewPort {
   }
 
   flush() {
-    const objects = this.objects.map(object => ObjectView.fromGameObject(object)).flat();
+    const objects = this.objects.map(object => object.view.toRenderObject()).flat();
 
     objects.sort((a, b) => {
       //sort by z-index
@@ -138,29 +139,60 @@ export class ViewPort {
   }
 }
 
-export class ObjectView {
-  texture = undefined as any;
-  size = [0, 0] as [number, number];
-  position = [0, 0] as [number, number];
-  filter = "";
-  zIndex = 0;
-
-  constructor(size: [number, number], position: [number, number], texture: Texture, zIndex: number, filter: string) {
-    this.size = size;
+export class RenderObject {
+  constructor(
+    position: [number, number],
+    size: [number, number],
+    texture: Texture,
+  ) {
     this.position = position;
+    this.size = size;
     this.texture = texture;
+  }
+
+  setPosition(position: [number, number]) {
+    this.position = position;
+    return this;
+  }
+
+  setSize(size: [number, number]) {
+    this.size = size;
+    return this;
+  }
+
+  setTexture(texture: Texture) {
+    this.texture = texture;
+    return this;
+  }
+
+  setIndex(zIndex: number) {
     this.zIndex = zIndex;
-    this.filter = filter
+    return this;
   }
 
-  static fromGameObject(object: GameObject): ObjectView[] {
-    return [
-      new ObjectView(object.size,
-        object.position,
-        object.texture,
-        object.zIndex,
-        object.renderFilter
-      ), ...object.views];
+  setFilter(filters: string[] | string) {
+    if (typeof filters === "string") filters = [filters];
+    else this.filters = filters;
+    return this;
+  }
+  
+  addFilter(filter: string) {
+    this.filters.push(filter);
+    return this;
   }
 
+  removeFilter(filter: string) {
+    this.filters = this.filters.filter(f => f !== filter);
+    return this;
+  }
+
+  clone() {
+    return structuredClone(this);
+  }
+
+  texture: Texture;
+  size: [number, number];
+  position: [number, number];
+  zIndex: number = 0;
+  filters: string[] = [];
 }
