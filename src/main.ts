@@ -11,8 +11,23 @@ import { FireMan } from './objects/enemies/fireman'
 import { Slime } from './objects/enemies/slime'
 import { Dog } from './objects/enemies/dog'
 import Bgm from '/bgm.mp3'
+import { bitmapManager } from './modules/texture'
+
+// other images
+import PlayerImage from '@bitmaps/player.png'
+import DefaultImage from '@bitmaps/default.webp'
+import BackgroundImage from '@bitmaps/background.png'
+// enemies
+import SlimeImage from '@bitmaps/enemies/slime.png'
+import DogImage from '@bitmaps/enemies/dog.webp'
+import FireManImage from '@bitmaps/enemies/fireman.png'
+// bullet
+import FireBallImage from '@bitmaps/bullets/fireball.png'
+import RockImage from '@bitmaps/bullets/rock.png'
 
 createApp(App).mount('#ui')
+
+bitmapManager.loadMany([PlayerImage, DefaultImage, BackgroundImage, SlimeImage, DogImage, FireManImage, FireBallImage, RockImage,])
 
 export class Game {
 

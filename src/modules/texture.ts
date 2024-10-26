@@ -3,17 +3,23 @@ import DefaultImage from "@bitmaps/default.webp";
 export const bitmapManager = new class BitmapManager {
   bitmaps = new Map<string, ImageBitmap>();
 
-  load(url: string, callback: (bitmap: ImageBitmap) => void) {
-    if (this.bitmaps.has(url)) return callback(this.bitmaps.get(url)!);
+  loadMany(urls: string[]) {
+    return Promise.all(urls.map(url => this.load(url)));
+  }
 
-    const image = new Image();
-    image.onload = () => {
-      createImageBitmap(image).then(bitmap => {
-        this.bitmaps.set(url, bitmap)
-        callback(bitmap);
-      });
-    }
-    image.src = url;
+  load(url: string): Promise<ImageBitmap> {
+    return new Promise(resolve => {
+      if (this.bitmaps.has(url)) return resolve(this.bitmaps.get(url)!);
+
+      const image = new Image();
+      image.onload = () => {
+        createImageBitmap(image).then(bitmap => {
+          this.bitmaps.set(url, bitmap)
+          resolve(bitmap);
+        });
+      }
+      image.src = url;
+    })
   }
 
   clear() {
@@ -40,7 +46,7 @@ export class SingleTexture implements Texture {
   bitmap: ImageBitmap | undefined;
   imageSize: [number, number] = [0, 0];
   constructor(url: string) {
-    bitmapManager.load(url, bitmap => {
+    bitmapManager.load(url).then(bitmap => {
       this.imageSize = [bitmap.width, bitmap.height];
       this.bitmap = bitmap
     });
@@ -70,8 +76,7 @@ export class AnimationTexture implements Texture {
     this.frames = frames;
     this.fps = fps;
 
-    bitmapManager.load(url, bitmap => {
-      console.log(bitmap)
+    bitmapManager.load(url).then(bitmap => {
       this.bitmap = bitmap
     });
   }
