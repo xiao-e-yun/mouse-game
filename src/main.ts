@@ -10,6 +10,7 @@ import { Bullet } from './objects/bullet'
 import { FireMan } from './objects/enemies/fireman'
 import { Slime } from './objects/enemies/slime'
 import { Dog } from './objects/enemies/dog'
+import Bgm from '/bgm.mp3'
 
 createApp(App).mount('#ui')
 
@@ -65,7 +66,7 @@ export class Game {
   idRecord = 0
   paused = ref(false)
   running = ref(false)
-  audio = new Audio('/bgm.mp3')
+  audio = new Audio(Bgm)
   viewport = new ViewPort([1600, 900]);
 
   constructor(
