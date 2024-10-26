@@ -95,8 +95,7 @@ export class Game {
     // request next frame
     if (!this.prepareNextFrame(delta)) return
 
-    const mousePos = this.render.mapFromScreen(this.controller.mouse)
-    const mouse = this.viewport.mapToViewport(mousePos)
+    const mouse = this.render.mapFromScreen(this.controller.mouse,this.viewport)
     this.runMain(delta, mouse)
 
     if (this.player.destoryed) {
