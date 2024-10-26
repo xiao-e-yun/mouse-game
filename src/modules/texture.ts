@@ -1,17 +1,15 @@
 import DefaultImage from "@bitmaps/default.webp";
 
 export const bitmapManager = new class BitmapManager {
-  bitmaps = new Map<[string, undefined | string], ImageBitmap>();
+  bitmaps = new Map<string, ImageBitmap>();
 
-  load(url: string, callback: (bitmap: ImageBitmap) => void, options: { id?: string } = {}) {
-    const id = options.id;
-
-    if (this.bitmaps.has([url, id])) callback(this.bitmaps.get([url, id])!);
+  load(url: string, callback: (bitmap: ImageBitmap) => void) {
+    if (this.bitmaps.has(url)) return callback(this.bitmaps.get(url)!);
 
     const image = new Image();
     image.onload = () => {
       createImageBitmap(image).then(bitmap => {
-        this.bitmaps.set([url, id], bitmap)
+        this.bitmaps.set(url, bitmap)
         callback(bitmap);
       });
     }
@@ -73,6 +71,7 @@ export class AnimationTexture implements Texture {
     this.fps = fps;
 
     bitmapManager.load(url, bitmap => {
+      console.log(bitmap)
       this.bitmap = bitmap
     });
   }
