@@ -3,6 +3,11 @@ import { GameObject } from "@/modules/object"
 import { AttackSystem } from "@/systems/attack"
 import { HealthSystem } from "@/systems/health"
 
+import EmptyIcon from "/inventory/empty.png"
+
+import PowerIcon from "/inventory/power.png"
+import HealHealthIcon from "/inventory/heal_health.png"
+
 export function getAllUpgrades() {
   return [
     new class TestWeapon extends InventoryItem implements IInventoryItem {
@@ -14,8 +19,8 @@ export function getAllUpgrades() {
       getDescription(level: number): string {
         return `Increase damage by ${this.coefficient * level}`
       }
-      getIcon() { return "/inventory/power.png" }
-      next() {}
+      getIcon() { return PowerIcon }
+      next() { }
       added(_: Game, object: GameObject) { object.getSystem(AttackSystem)!.damage += this.coefficient }
       upgrade(_: Game, object: GameObject) { object.getSystem(AttackSystem)!.damage += this.coefficient }
       maxLevel() { return 6 }
@@ -23,7 +28,7 @@ export function getAllUpgrades() {
     new class TestWeapon extends InventoryItem implements IInventoryItem {
       id = "boots.heal_health"
       name = "Heal"
-      getIcon() { return "/inventory/heal_health.png" }
+      getIcon() { return HealHealthIcon }
       getDescription() { return "Heal 5 health" }
 
       added(_: Game, object: GameObject) { object.getSystem(HealthSystem)!.heal(5) }
@@ -72,4 +77,6 @@ export class InventoryItem {
   // default max level is 6
   maxLevel(): number { return 6 }
   isOnce(): boolean { return false }
+
+  static emptyIcon = EmptyIcon
 }

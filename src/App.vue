@@ -3,6 +3,9 @@ import { shallowRef } from 'vue';
 import { Game } from './main';
 import { Controller } from './modules/controller';
 import { Render } from './modules/render';
+import { InventoryItem } from './inventory';
+
+
 
 // utils
 const controller = new Controller();
@@ -48,7 +51,7 @@ function restartGame() {
 
     <div class="inventory">
       <div v-for="item in game.inventory.items" class="item"
-        :style="`background-image: url(${item ? item.getIcon() : '/inventory/empty.png'})`"
+        :style="`background-image: url(${item ? item.getIcon() : InventoryItem.emptyIcon})`"
         :title="item ? item.getDescription(item.level) : ''">
         <template v-if="item">
           <span class="level">{{ item.displayLevel() }}</span>
