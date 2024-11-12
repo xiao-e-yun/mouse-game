@@ -151,9 +151,8 @@ export class Game {
   }
 
   togglePause() {
-    if (!this.isRunning) return
-    this.paused.value = !this.isPaused
-    if (!this.isPaused) this.run()
+    if (this.isPaused) this.resume()
+    else this.pause()
   }
 
   pause() {
@@ -164,6 +163,7 @@ export class Game {
   resume() {
     if (!this.isRunning) return
     this.paused.value = false
+    this.controller.reset()
     this.run()
   }
 
