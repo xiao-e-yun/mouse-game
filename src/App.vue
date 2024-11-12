@@ -3,6 +3,7 @@ import { shallowRef } from 'vue';
 import { Game } from './main';
 import { Controller } from './modules/controller';
 import { Render } from './modules/render';
+import { InventoryItemType } from './inventory';
 
 // utils
 const controller = new Controller();
@@ -31,10 +32,13 @@ function restartGame() {
     <h1>Game</h1>
     <div class="menu"><button @click="startGame">Start</button></div>
   </div>
-  <div v-else-if="game.health.value > 0" class="game">
+  <div v-else-if="game.isRunning" class="game"
+    :style="'animation-play-state:' + (game.isPaused ? 'paused' : 'running')">
+
     <div class="menu-bar">
       <button @click="game.togglePause">Pause</button>
     </div>
+
     <div class="info-bar">
       <span>
         <img class="image-label" src="/heart.png">
@@ -43,13 +47,40 @@ function restartGame() {
       <span>Level: {{ game.level.value }}</span>
     </div>
 
+    <div class="inventory">
+      <div v-for="item in game.inventory.items" class="item"
+        :style="`background-image: url(${item ? item.getIcon() : '/inventory/empty.png'})`"
+        :title="item ? item.getDescription(item.level) : ''">
+        <template v-if="item">
+          <span class="level">{{ item.displayLevel() }}</span>
+        </template>
+      </div>
+    </div>
+
     <div class="combat" v-if="game.combats.value">
       <h2>{{ game.combats.value }}</h2>
       <span class="slider"><span :key="game.combats.value" /></span>
     </div>
 
-    <div class="page settings-outter" v-if="game.isPaused">
-      <div class="settings">
+    <div class="page layout-outter" v-if="game.isPaused">
+
+      <div class="layout" v-if="game.isUpgrading">
+        <h1>Upgrade</h1>
+        <span>Select an upgrade</span>
+
+        <div class="upgrades">
+          <button v-for="item in game.inventory.listUpgrades(3)"
+            @click="game.inventory.addOrUpgrade(item), game.upgrading.value = false">
+            <img :src="item.getIcon()" />
+            <span>Level: {{ item.displayLevel(true) }}</span>
+            <span class="name">{{ item.name }}</span>
+            <span>{{ item.getDescription(item.level + (item.has ? 1 : 0)) }}</span>
+          </button>
+        </div>
+
+      </div>
+
+      <div class="layout" v-else>
         <h1>Menu</h1>
         <div>
           <label>Volume</label>
@@ -61,6 +92,7 @@ function restartGame() {
           <button @click="game.togglePause">Resume</button>
         </div>
       </div>
+
     </div>
 
   </div>
@@ -78,13 +110,17 @@ function restartGame() {
 <style lang="scss" scoped>
 .game {
 
+  //
+  & * {
+    animation-play-state: inherit !important;
+  }
 
-  & .settings-outter {
+  & .layout-outter {
     backdrop-filter: blur(5px);
     background: #111a;
   }
 
-  & .settings {
+  & .layout {
 
     display: flex;
     flex-direction: column;
@@ -147,6 +183,38 @@ function restartGame() {
     }
   }
 
+  .inventory {
+    position: fixed;
+    bottom: 0.5em;
+    left: 0.5em;
+    padding: .2em;
+    display: flex;
+    border-radius: .2em;
+    gap: .2em;
+    background: var(--background);
+
+    & .item {
+      width: 2em;
+      height: 2em;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+
+      .level {
+        position: absolute;
+        right: .2em;
+        bottom: 0;
+        font-size: .5em;
+      }
+
+      &:hover {
+        filter: brightness(1.2);
+        transition: filter .3s;
+      }
+    }
+  }
+
   .combat {
     display: flex;
     flex-direction: column;
@@ -189,6 +257,34 @@ function restartGame() {
     }
 
 
+  }
+
+  & .upgrades {
+    display: flex;
+    gap: 1em;
+    flex-wrap: wrap;
+
+    & button {
+      padding: 1.2em;
+      background: var(--background);
+
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: .6em;
+
+      img {
+        object-fit: contain;
+        display: block;
+        height: 8em;
+        width: 8em;
+      }
+
+      .name {
+        margin-top: 1em;
+      }
+    }
   }
 
   & .image-label {

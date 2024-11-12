@@ -1,4 +1,4 @@
-import { createApp, ref } from 'vue'
+import { createApp, ref, watch } from 'vue'
 import App from "./App.vue"
 import './style.scss'
 import { Controller } from './modules/controller'
@@ -37,8 +37,24 @@ export class Game {
 
   runMain(_delta = 0, mouse: [number, number]) {
 
-    // level 
+    // check if level is cleared
     if (this.enemies.size === 0) {
+      //upgrage
+      if (this.level.value > 0) {
+        this.upgrading.value = true
+
+        const paused = this.isPaused
+        if (paused) return
+
+        this.pause()
+        const unwatch = watch(this.upgrading, value => {
+          if (value) return
+          if (this.isRunning) this.resume()
+          unwatch()
+        })
+      }
+
+      // level 
       const level = ++this.level.value
       const places = new Array(16 * 9).fill(0).map((_, i) => [i % 16 - 8, Math.floor(i / 16) - 4.5])
       for (let i = 0; i < level * 2; i++) {
@@ -70,6 +86,7 @@ export class Game {
   level = ref(0)
   health = ref(1)
   combats = ref(0)
+  upgrading = ref(false)
   maxCombat = 0
   player: Player
   enemies = new Set<Enemy>()
@@ -95,7 +112,7 @@ export class Game {
     // request next frame
     if (!this.prepareNextFrame(delta)) return
 
-    const mouse = this.render.mapFromScreen(this.controller.mouse,this.viewport)
+    const mouse = this.render.mapFromScreen(this.controller.mouse, this.viewport)
     this.runMain(delta, mouse)
 
     if (this.player.destoryed) {
@@ -172,6 +189,13 @@ export class Game {
     this.combats.value++
   }
 
+  get inventory() {
+    return this.player.inventorySystem
+  }
+
+  get isUpgrading() {
+    return this.upgrading.value
+  }
   get isPaused() {
     return this.paused.value || !this.running.value
   }

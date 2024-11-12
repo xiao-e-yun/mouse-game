@@ -8,6 +8,9 @@ export class Bar {
   set(value: number) {
     this.value = value;
   }
+  setMax(value: number) {
+    this.max = value;
+  }
   add(value: number) {
     this.value += value;
     if (this.value > this.max) this.value = this.max;

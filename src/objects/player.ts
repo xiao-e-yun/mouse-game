@@ -6,11 +6,14 @@ import { AttackSystem, AttackTarget } from "../systems/attack";
 import { HealthSystem } from "../systems/health";
 import { Timer } from "@/modules/utils";
 import { RockExplosion } from "./bullets/rock_explosion";
+import { InventorySystem } from "@/systems/inventory";
 
 export class Player extends GameObject {
   attackSystem: AttackSystem
   healthSystem: HealthSystem
+  inventorySystem: InventorySystem
   skill = new Timer(3000);
+
   constructor(private game: Game) {
     super(game, {
       position: [0, 0],
@@ -26,9 +29,15 @@ export class Player extends GameObject {
     });
     this.healthSystem = new HealthSystem(this, { value: 30, invincible: 200 })
 
+    // only for player
+    this.inventorySystem = new InventorySystem(game, this, {
+
+    })
+
     this.setSystems([
       this.attackSystem,
       this.healthSystem,
+      this.inventorySystem,
     ])
   }
 
