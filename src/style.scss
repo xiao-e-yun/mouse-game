@@ -10,7 +10,9 @@
 
   color-scheme: light dark;
   color: var(--color);
-  background-color: var(--background);
+  background: url("background.jpg")
+    top center fixed;
+  background-size: cover;
 
   font-synthesis: none;
   box-sizing: border-box;
@@ -24,7 +26,8 @@ body {
   height: 100%;
 }
 
-#ui, #game {
+#ui,
+#game {
   top: 0;
   left: 0;
   position: fixed;
@@ -53,12 +56,11 @@ button {
   display: block;
   font-size: 16px;
   padding: 0.2em 1em;
-  border-radius: .2em;
+  border-radius: 0.2em;
   color: var(--color);
   background: var(--background);
 
   &:hover {
-    filter: brightness(.8);
-  }      
-
+    filter: brightness(0.8);
+  }
 }
