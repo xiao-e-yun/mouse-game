@@ -119,7 +119,7 @@ export class Game {
   }
 
   prepareNextFrame(delta: number) {
-    if (this.isPaused || !this.isRunning) return false
+    if (this.isPaused) return false
 
     const old = performance.now()
     requestAnimationFrame(() => {
@@ -137,6 +137,17 @@ export class Game {
     if (!this.isRunning) return
     this.paused.value = !this.isPaused
     if (!this.isPaused) this.run()
+  }
+
+  pause() {
+    if (!this.isRunning) return
+    this.paused.value = true
+  }
+
+  resume() {
+    if (!this.isRunning) return
+    this.paused.value = false
+    this.run()
   }
 
   start() {
@@ -162,7 +173,7 @@ export class Game {
   }
 
   get isPaused() {
-    return this.paused.value
+    return this.paused.value || !this.running.value
   }
   get isRunning() {
     return this.running.value
