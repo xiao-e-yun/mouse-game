@@ -8,7 +8,7 @@ import { AttackSystem, AttackTarget } from "@/systems/attack";
 export class RockExplosion extends Bullet {
   offset = 64;
   generate = new Timer(80);
-  constructor(private game: Game, position: [number, number], public vector?: [number, number] | undefined, public level = 4) {
+  constructor(private game: Game, position: [number, number], public level = 4, public vector?: [number, number] | undefined) {
     super(game, {
       position: structuredClone(position),
       lifetime: 500,
@@ -42,8 +42,8 @@ export class RockExplosion extends Bullet {
       this.game.bullets.add(new RockExplosion(
         this.game,
         [x + dx * this.offset, y + dy * this.offset],
+        this.level - 1,
         [dx, dy],
-        this.level - 1
       ));
     }
   }

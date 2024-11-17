@@ -12,7 +12,8 @@ export class Player extends GameObject {
   attackSystem: AttackSystem
   healthSystem: HealthSystem
   inventorySystem: InventorySystem
-  skill = new Timer(3000);
+  skillDuration = new Timer(3000);
+  skillLevel = 3;
 
   constructor(private game: Game) {
     super(game, {
@@ -47,15 +48,15 @@ export class Player extends GameObject {
 
   control(mouse: [number, number], clicked: boolean) {
     this.position = mouse;
-    if (clicked && this.skill.done()) {
-      this.skill.start();
-      this.game.bullets.add(new RockExplosion(this.game, this.position));
+    if (clicked && this.skillDuration.done()) {
+      this.skillDuration.start();
+      this.game.bullets.add(new RockExplosion(this.game, this.position, this.skillLevel));
     }
   }
 
   next(delta: number) {
     super.next(delta);
-    this.skill.tick(delta);
+    this.skillDuration.tick(delta);
   }
 
   get health() {
