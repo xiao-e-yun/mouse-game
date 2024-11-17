@@ -37,12 +37,19 @@ function buttonSound() {
   <div class="page" v-if="!game">
     <h1>Game</h1>
     <div class="menu"><button @click="startGame">Start</button></div>
+    <fieldset>
+      <legend>Rule</legend>
+      You are a weapon.
+      Survive as long as possible by hovering over enemies to attack them.<wbr>
+      Click to cast a spell.<wbr>
+      Upgrade your items to improve your chances of survival.
+    </fieldset>
   </div>
   <div v-else-if="game.isRunning" class="game"
     :style="'animation-play-state:' + (game.isPaused ? 'paused' : 'running')">
 
     <div class="menu-bar">
-      <button @click="buttonSound(),game.togglePause()">Pause</button>
+      <button @click="buttonSound(), game.togglePause()">Pause</button>
     </div>
 
     <div class="info-bar">
@@ -93,9 +100,9 @@ function buttonSound() {
           <input type="range" min="0" max="1" step="0.1" v-model="game.volume.value" />
         </div>
         <div class="btns">
-          <button @click="buttonSound(),stopGame()">Back</button>
-          <button @click="buttonSound(),restartGame()">Restart</button>
-          <button @click="buttonSound(),game.togglePause()">Resume</button>
+          <button @click="buttonSound(), stopGame()">Back</button>
+          <button @click="buttonSound(), restartGame()">Restart</button>
+          <button @click="buttonSound(), game.togglePause()">Resume</button>
         </div>
       </div>
 
@@ -107,8 +114,8 @@ function buttonSound() {
     <p>Last Level: {{ game.level.value }}</p>
     <p>Max Combat: {{ game.maxCombat }}</p>
     <div class="menu">
-      <button @click="buttonSound(),restartGame()">Restart</button>
-      <button @click="buttonSound(),stopGame()">Back</button>
+      <button @click="buttonSound(), restartGame()">Restart</button>
+      <button @click="buttonSound(), stopGame()">Back</button>
     </div>
   </div>
 </template>
@@ -322,6 +329,20 @@ function buttonSound() {
     & button {
       border: var(--color) 2px solid;
       padding: 0.2em 1em;
+    }
+  }
+
+  fieldset {
+    margin: 1em auto;
+    padding: 1em;
+    border: var(--color) 2px solid;
+    border-radius: .5em;
+    width: 80%;
+    max-width: 30em;
+
+    & legend {
+      text-align: left;
+      padding: 0 .2em;
     }
   }
 }
