@@ -15,6 +15,7 @@ export class RockExplosion extends Bullet {
       size: new Array(2).fill(64 + (level * 8)) as [number, number],
       texture: new SingleTexture(RockImage),
     });
+    this.game.playAudioOnce("attack2");
 
     this.generate.start();
     this.setSystems([new AttackSystem(game, this, { targets: AttackTarget.Enemy, damage: 20 + 5 * level, cooldown: Infinity, afterAttack: () => this.game.combat() })]);

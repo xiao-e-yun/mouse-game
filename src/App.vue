@@ -27,6 +27,10 @@ function restartGame() {
   stopGame();
   startGame();
 }
+
+function buttonSound() {
+  if (game.value) game.value.playAudioOnce('button');
+}
 </script>
 
 <template>
@@ -38,7 +42,7 @@ function restartGame() {
     :style="'animation-play-state:' + (game.isPaused ? 'paused' : 'running')">
 
     <div class="menu-bar">
-      <button @click="game.togglePause">Pause</button>
+      <button @click="buttonSound(),game.togglePause()">Pause</button>
     </div>
 
     <div class="info-bar">
@@ -72,7 +76,7 @@ function restartGame() {
 
         <div class="upgrades">
           <button v-for="item in game.inventory.listUpgrades(3)"
-            @click="game.inventory.addOrUpgrade(item), game.upgrading.value = false">
+            @click="buttonSound(), game.inventory.addOrUpgrade(item), game.upgrading.value = false">
             <img :src="item.getIcon()" />
             <span>Level: {{ item.displayLevel(true) }}</span>
             <span class="name">{{ item.name }}</span>
@@ -86,12 +90,12 @@ function restartGame() {
         <h1>Menu</h1>
         <div>
           <label>Volume</label>
-          <input type="range" min="0" max="1" step="0.1" v-model="game.audio.volume" />
+          <input type="range" min="0" max="1" step="0.1" v-model="game.volume.value" />
         </div>
         <div class="btns">
-          <button @click="stopGame">Back</button>
-          <button @click="restartGame">Restart</button>
-          <button @click="game.togglePause">Resume</button>
+          <button @click="buttonSound(),stopGame()">Back</button>
+          <button @click="buttonSound(),restartGame()">Restart</button>
+          <button @click="buttonSound(),game.togglePause()">Resume</button>
         </div>
       </div>
 
@@ -103,8 +107,8 @@ function restartGame() {
     <p>Last Level: {{ game.level.value }}</p>
     <p>Max Combat: {{ game.maxCombat }}</p>
     <div class="menu">
-      <button @click="restartGame">Restart</button>
-      <button @click="stopGame">Back</button>
+      <button @click="buttonSound(),restartGame()">Restart</button>
+      <button @click="buttonSound(),stopGame()">Back</button>
     </div>
   </div>
 </template>

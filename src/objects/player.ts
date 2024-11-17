@@ -25,7 +25,10 @@ export class Player extends GameObject {
     });
 
     this.attackSystem = new AttackSystem(game, this, {
-      targets: AttackTarget.Enemy, damage: 10, afterAttack: () => this.game.combat()
+      targets: AttackTarget.Enemy, damage: 10, afterAttack: () => {
+        this.game.playAudioOnce("attack1");
+        this.game.combat();
+      }
     });
     this.healthSystem = new HealthSystem(this, { value: 30, invincible: 200 })
 
