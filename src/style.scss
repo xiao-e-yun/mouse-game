@@ -1,5 +1,11 @@
+@font-face {
+  font-family: "VcrOsdMono";
+  src: url("/vcr_osd_mono.ttf") format("truetype");
+}
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "VcrOsdMono", Inter, system-ui, Avenir, Helvetica, Arial,
+    sans-serif;
   line-height: 1.5;
   font-weight: 400;
   font-size: 20px;
@@ -10,8 +16,7 @@
 
   color-scheme: light dark;
   color: var(--color);
-  background: url("/background.jpg")
-    top center fixed;
+  background: url("/background.jpg") top center fixed;
   background-size: cover;
 
   font-synthesis: none;
@@ -19,6 +24,10 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  font-family: "VcrOsdMono", Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 body {

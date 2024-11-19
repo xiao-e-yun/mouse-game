@@ -36,7 +36,9 @@ function buttonSound() {
 <template>
   <div class="page" v-if="!game">
     <h1>Game</h1>
-    <div class="menu"><button @click="startGame">Start</button></div>
+    <div class="menu">
+      <button @click="startGame" class="icon-btn"><img src="/buttons/start.png"></button>
+    </div>
     <fieldset>
       <legend>Rule</legend>
       You are a weapon.
@@ -49,7 +51,8 @@ function buttonSound() {
     :style="'animation-play-state:' + (game.isPaused ? 'paused' : 'running')">
 
     <div class="menu-bar">
-      <button @click="buttonSound(), game.togglePause()">Pause</button>
+      <button @click="buttonSound(), game.togglePause()" class="icon-btn"><img style="width: 3em;"
+          src="/buttons/pause.png"></button>
     </div>
 
     <div class="info-bar">
@@ -96,13 +99,13 @@ function buttonSound() {
       <div class="layout" v-else>
         <h1>Menu</h1>
         <div>
-          <label>Volume</label>
+          <label><img style="width: 1em;" src="/buttons/volume.png"></label>
           <input type="range" min="0" max="1" step="0.1" v-model="game.volume.value" />
         </div>
         <div class="btns">
-          <button @click="buttonSound(), stopGame()">Back</button>
-          <button @click="buttonSound(), restartGame()">Restart</button>
-          <button @click="buttonSound(), game.togglePause()">Resume</button>
+          <button @click="buttonSound(), stopGame()" class="icon-btn"><img src="/buttons/back.png"></button>
+          <button @click="buttonSound(), restartGame()" class="icon-btn"><img src="/buttons/resart.png"></button>
+          <button @click="buttonSound(), game.togglePause()" class="icon-btn"><img src="/buttons/resume.png"></button>
         </div>
       </div>
 
@@ -344,6 +347,16 @@ function buttonSound() {
       text-align: left;
       padding: 0 .2em;
     }
+  }
+}
+
+.icon-btn {
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+
+  & img {
+    width: 10em;
   }
 }
 </style>
