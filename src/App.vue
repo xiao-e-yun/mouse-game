@@ -104,7 +104,7 @@ function buttonSound() {
         </div>
         <div class="btns">
           <button @click="buttonSound(), stopGame()" class="icon-btn"><img src="/buttons/back.png"></button>
-          <button @click="buttonSound(), restartGame()" class="icon-btn"><img src="/buttons/resart.png"></button>
+          <button @click="buttonSound(), restartGame()" class="icon-btn"><img src="/buttons/restart.png"></button>
           <button @click="buttonSound(), game.togglePause()" class="icon-btn"><img src="/buttons/resume.png"></button>
         </div>
       </div>
@@ -117,8 +117,8 @@ function buttonSound() {
     <p>Last Level: {{ game.level.value }}</p>
     <p>Max Combat: {{ game.maxCombat }}</p>
     <div class="menu">
-      <button @click="buttonSound(), restartGame()">Restart</button>
-      <button @click="buttonSound(), stopGame()">Back</button>
+      <button @click="buttonSound(), restartGame()" class="icon-btn"><img src="/buttons/restart.png"></button>
+      <button @click="buttonSound(), stopGame()" class="icon-btn"><img src="/buttons/back.png"></button>
     </div>
   </div>
 </template>
