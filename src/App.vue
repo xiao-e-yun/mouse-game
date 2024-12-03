@@ -34,7 +34,7 @@ function buttonSound() {
 </script>
 
 <template>
-  <div class="page" v-if="!game">
+  <div class="page main" v-if="!game">
     <h1>Game</h1>
     <div class="menu">
       <button @click="startGame" class="icon-btn"><img src="/buttons/start.png"></button>
@@ -112,8 +112,7 @@ function buttonSound() {
     </div>
 
   </div>
-  <div class="page" v-else>
-    <h1>Game Over</h1>
+  <div class="page gameover" v-else>
     <p>Last Level: {{ game.level.value }}</p>
     <p>Max Combat: {{ game.maxCombat }}</p>
     <div class="menu">
@@ -335,6 +334,24 @@ function buttonSound() {
     }
   }
 
+  &.gameover {
+    background: url("/gameover.png") no-repeat center;
+    background-size: cover;
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  &.main {
+    background: url('/background.gif'), #6DB3F2;
+    background-size: cover;
+
+    &>* {
+      text-shadow: 0 0 1em var(--background);
+    }
+  }
+
   fieldset {
     margin: 1em auto;
     padding: 1em;
@@ -343,9 +360,15 @@ function buttonSound() {
     width: 80%;
     max-width: 30em;
 
+    background: color-mix(in srgb, var(--background) 80%, transparent);
+    text-shadow: none !important;
+
     & legend {
+      color: var(--background);
+      background: var(--color);
+      border-radius: .4em;
       text-align: left;
-      padding: 0 .2em;
+      padding: 0 .4em;
     }
   }
 }
