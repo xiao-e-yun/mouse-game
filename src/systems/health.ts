@@ -10,6 +10,9 @@ export class HealthSystem implements System {
   destroyOnDeath: boolean;
   repeatable: boolean;
   #repeatedDamaged = 0;
+
+  beforeDamage = new Set<(damage: number) => number>();
+
   constructor(private object: GameObject, options: {
     value: number,
     /** @default value */
@@ -42,6 +45,10 @@ export class HealthSystem implements System {
     if (this.#invincible) {
       if (this.#invincible.running()) return false;
       this.#invincible.start();
+    }
+
+    for (const callback of this.beforeDamage.values()) {
+      damage = callback(damage);
     }
 
     this.inner.value -= damage;
@@ -79,11 +86,26 @@ export class HealthSystem implements System {
   }
 
   //view
+  bindHealthBar(): () => void {
+    const [object,update] = this.getHealthBar();
+    this.object.view.setSubObjects("healthBar", [object]);
+    return update
+  }
+
   getHealthBar() {
     const [position, size] = this.getHealthBarPlace();
     const texture = new SingleTexture(`data:image/webp;base64,UklGRjwAAABXRUJQVlA4IDAAAADQAQCdASoIAAgAAgA0JaACdLoB+AADsAD+8Oj3/yC5YXXI1/8gP+MqfGVP+PIAAAA=`)
-    return new RenderObject(position, size, texture)
+    const value = new RenderObject(position, size, texture)
+    return [
+      value,
+      () => {
+        const [position, size] = this.getHealthBarPlace();
+        value.setPosition(position);
+        value.setSize(size);
+      },
+    ] as const 
   }
+  
   getHealthBarPlace(): [[number, number], [number, number]] {
     const offset = 8;
     const height = 4;

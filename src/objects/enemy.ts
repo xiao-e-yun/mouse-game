@@ -3,12 +3,11 @@ import { Texture } from "@/modules/texture";
 import { Game } from "@/main";
 import { AttackSystem, AttackTarget } from "../systems/attack";
 import { HealthSystem } from "../systems/health";
-import { RenderObject } from "@/modules/render";
 
 export class Enemy extends GameObject {
   attackSystem: AttackSystem;
   healthSystem: HealthSystem;
-  healthBar: RenderObject;
+  updateHealthBar: () => void;
   constructor(protected game: Game, options: {
     position: [number, number],
     size: [number, number],
@@ -31,8 +30,7 @@ export class Enemy extends GameObject {
       this.healthSystem,
     ])
 
-    this.healthBar = this.healthSystem.getHealthBar()
-    this.view.setSubObjects("healthBar", [this.healthBar]);
+    this.updateHealthBar = this.healthSystem.bindHealthBar();
   }
 
   override next(delta: number): void {
@@ -48,9 +46,6 @@ export class Enemy extends GameObject {
     }
 
     this.view.filters = [filter];
-
-    const [position, size] = this.healthSystem.getHealthBarPlace();
-    this.healthBar.setPosition(position);
-    this.healthBar.setSize(size);
+    this.updateHealthBar();
   }
 }

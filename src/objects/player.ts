@@ -4,16 +4,14 @@ import PlayerImage from "@bitmaps/player.png";
 import { Game } from "@/main";
 import { AttackSystem, AttackTarget } from "../systems/attack";
 import { HealthSystem } from "../systems/health";
-import { Timer } from "@/modules/utils";
-import { RockExplosion } from "./bullets/rock_explosion";
 import { InventorySystem } from "@/systems/inventory";
+import { SkillSystem } from "@/systems/skills";
 
 export class Player extends GameObject {
+  skillSystem: SkillSystem
   attackSystem: AttackSystem
   healthSystem: HealthSystem
   inventorySystem: InventorySystem
-  skillDuration = new Timer(3000);
-  skillLevel = 3;
 
   constructor(private game: Game) {
     super(game, {
@@ -38,25 +36,27 @@ export class Player extends GameObject {
 
     })
 
+    this.skillSystem = new SkillSystem(game, this, {
+      cooldown: 2000,
+      level: 1
+    })
+
     this.setSystems([
       this.attackSystem,
       this.healthSystem,
       this.inventorySystem,
+      this.skillSystem
     ])
   }
 
 
   control(mouse: [number, number], clicked: boolean) {
     this.position = mouse;
-    if (clicked && this.skillDuration.done()) {
-      this.skillDuration.start();
-      this.game.bullets.add(new RockExplosion(this.game, this.position, this.skillLevel));
-    }
+    if (clicked) this.skillSystem.call();
   }
 
   next(delta: number) {
     super.next(delta);
-    this.skillDuration.tick(delta);
   }
 
   get health() {
