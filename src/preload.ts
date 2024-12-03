@@ -29,12 +29,16 @@ import Attack1Sound from '/sounds/attack1.mp3'
 import Attack2Sound from '/sounds/attack2.mp3'
 import ButtonSound from '/sounds/button.mp3'
 import LevelUpSound from '/sounds/level-up.mp3'
+import ShieldResotreSound from '/sounds/shield-restore.mp3'
+import ShieldBreakSound from '/sounds/shield-break.mp3'
 const loadAudios = [
   ["bgm", Bgm],
   ["attack1", Attack1Sound],
   ["attack2", Attack2Sound],
   ["button", ButtonSound],
   ["level-up", LevelUpSound],
+  ["shield-resotre", ShieldResotreSound],
+  ["shield-break", ShieldBreakSound],
 ] as [string, string][]
 
 

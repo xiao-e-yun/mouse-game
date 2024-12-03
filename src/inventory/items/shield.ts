@@ -8,6 +8,7 @@ import ShieldImage from "/inventory/shield.png"
 import ShieldActiveImage from "/bitmaps/items/shield.png"
 import { GameObject } from "@/modules/object"
 import { Game } from "@/main"
+import { audioManager } from "@/modules/audios"
 
 export class ShieldItem extends InventoryItem implements IInventoryItem {
   id = "base.shield"
@@ -42,8 +43,9 @@ export class ShieldItem extends InventoryItem implements IInventoryItem {
 
     health.beforeDamage.add((damage: number) => {
       if (this.record.running()) return damage
-
+      
       object.view.removeSubObjects("shield")
+      audioManager.play("shield-break")
       this.record.set(this.recharge);
       this.record.start();
       this.active = false
@@ -63,5 +65,6 @@ export class ShieldItem extends InventoryItem implements IInventoryItem {
     this.renderObject.position = [x, y]
 
     object.view.setSubObjects("shield", [this.renderObject])
+    audioManager.play("shield-resotre")
   }
 }
