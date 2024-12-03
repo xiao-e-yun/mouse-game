@@ -30,10 +30,12 @@ import FireManImage from '@bitmaps/enemies/fireman.png'
 // bullet
 import FireBallImage from '@bitmaps/bullets/fireball.png'
 import RockImage from '@bitmaps/bullets/rock.png'
+// items
+import ShieldImage from '@bitmaps/items/shield.png'
 
 createApp(App).mount('#ui')
 
-bitmapManager.loadMany([PlayerImage, DefaultImage, BackgroundImage, SlimeImage, DogImage, FireManImage, FireBallImage, RockImage,])
+bitmapManager.loadMany([PlayerImage, DefaultImage, BackgroundImage, SlimeImage, DogImage, FireManImage, FireBallImage, RockImage,ShieldImage,])
 
 export class Game {
 
