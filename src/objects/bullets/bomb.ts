@@ -5,6 +5,7 @@ import { Game } from "@/main";
 import BombImage from "@bitmaps/bullets/bomb.png";
 import BombBoomImage from "@bitmaps/bullets/bomb_boom.png";
 import { AttackSystem, AttackTarget } from "@/systems/attack";
+import { audioManager } from "@/modules/audios";
 
 export class Bomb extends Bullet {
   height = 150;
@@ -40,6 +41,7 @@ export class Bomb extends Bullet {
       this.explosion = true;
 
       this.view.texture = new SingleTexture(BombBoomImage);
+      audioManager.play("attack2"),
       this.setSystems([
         new AttackSystem(this.game, this, {
           afterAttack: () => this.game.combat(),
