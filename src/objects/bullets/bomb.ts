@@ -3,7 +3,7 @@ import { Bullet } from "../bullet";
 import { Game } from "@/main";
 
 import BombImage from "@bitmaps/bullets/bomb.png";
-import BombBoomImage from "@bitmaps/bullets/bomb_boom.png";
+import BombBoomImage from "@bitmaps/bullets/bomb-boom.png";
 import { AttackSystem, AttackTarget } from "@/systems/attack";
 import { audioManager } from "@/modules/audios";
 

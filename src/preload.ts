@@ -50,7 +50,7 @@ import FireManImage from '@bitmaps/enemies/fireman.png'
 import FireBallImage from '@bitmaps/bullets/fireball.png'
 import RockImage from '@bitmaps/bullets/rock.png'
 import BombImage from '@bitmaps/bullets/bomb.png'
-import BombBoomImage from '@bitmaps/bullets/bomb_boom.png'
+import BombBoomImage from '@bitmaps/bullets/bomb-boom.png'
 // items
 import ShieldImage from '@bitmaps/items/shield.png'
 // for preload
