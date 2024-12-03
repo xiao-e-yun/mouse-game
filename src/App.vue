@@ -4,8 +4,10 @@ import { Game } from './main';
 import { Controller } from './modules/controller';
 import { Render } from './modules/render';
 import { InventoryItem } from './inventory/utils';
+import { audioManager } from './modules/audios';
+import { preload } from './preload';
 
-
+const preloadStatus = preload()
 
 // utils
 const controller = new Controller();
@@ -28,14 +30,19 @@ function restartGame() {
   startGame();
 }
 
-function buttonSound() {
-  if (game.value) game.value.playAudioOnce('button');
+async function buttonSound() {
+  audioManager.play('button');
 }
 </script>
 
 <template>
-  <div class="page main" v-if="!game">
-    <h1>Game</h1>
+  <div class="page" v-if="!preloadStatus.ready">
+    <h1>Loading...</h1>
+    <span>Loaded: {{ preloadStatus.loaded }}</span><br>
+    <span>Total: {{ preloadStatus.total }}</span>
+  </div>
+  <div class="page" v-else-if="!game">
+    <h1>Mouse Game</h1>
     <div class="menu">
       <button @click="startGame" class="icon-btn"><img src="/buttons/start.png"></button>
     </div>
@@ -112,7 +119,8 @@ function buttonSound() {
     </div>
 
   </div>
-  <div class="page gameover" v-else>
+  <div class="page" v-else>
+    <h1>Game Over</h1>
     <p>Last Level: {{ game.level.value }}</p>
     <p>Max Combat: {{ game.maxCombat }}</p>
     <div class="menu">
@@ -277,9 +285,10 @@ function buttonSound() {
   & .upgrades {
     display: flex;
     gap: 1em;
-    flex-wrap: wrap;
+    margin: 0 1em;
 
     & button {
+      max-width: 18em;
       padding: 1.2em;
       background: var(--background);
 
@@ -335,22 +344,11 @@ function buttonSound() {
     }
   }
 
-  &.gameover {
-    background: url("/gameover.png") no-repeat center;
-    background-size: cover;
+  background: url('/background.gif'), #6DB3F2;
+  background-size: cover;
 
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-  }
-
-  &.main {
-    background: url('/background.gif'), #6DB3F2;
-    background-size: cover;
-
-    &>* {
-      text-shadow: 0 0 1em var(--background);
-    }
+  &>* {
+    text-shadow: 0 0 1em var(--background);
   }
 
   fieldset {
