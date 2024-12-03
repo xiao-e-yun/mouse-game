@@ -1,4 +1,4 @@
-import { IInventoryItem, InventoryItem } from ".."
+import { IInventoryItem, InventoryItem } from "../utils"
 import { AttackSystem } from "@/systems/attack"
 import { GameObject } from "@/modules/object"
 import { Game } from "@/main"

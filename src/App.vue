@@ -3,7 +3,7 @@ import { shallowRef } from 'vue';
 import { Game } from './main';
 import { Controller } from './modules/controller';
 import { Render } from './modules/render';
-import { InventoryItem } from './inventory';
+import { InventoryItem } from './inventory/utils';
 
 
 

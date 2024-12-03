@@ -1,4 +1,4 @@
-import { IInventoryItem, InventoryItem } from ".."
+import { IInventoryItem, InventoryItem } from "../utils"
 import { SingleTexture } from "@/modules/texture"
 import { RenderObject } from "@/modules/render"
 import { HealthSystem } from "@/systems/health"
