@@ -132,7 +132,7 @@ function buttonSound() {
 
   & .layout-outter {
     backdrop-filter: blur(5px);
-    background: #111a;
+    background: color-mix(in srgb, var(--background) 50%, transparent);
   }
 
   & .layout {
