@@ -1,7 +1,8 @@
 import { Game } from "@/main";
 import { System } from ".";
 import { GameObject } from "@/modules/object";
-import { InventoryItemType, getAllUpgrades } from "@/inventory";
+import { getAllUpgrades } from "@/inventory";
+import { InventoryItemType } from "@/inventory/utils";
 
 export class InventorySystem implements System {
   items: (InventoryItemType | undefined)[] = [];
