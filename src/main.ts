@@ -160,7 +160,9 @@ export class Game {
   async start() {
     this.running.value = true
     watch(this.volume, value => audioManager.setVolume(value))
-    this.bgm = audioManager.play("bgm")
+    this.bgm = audioManager.get("bgm")
+    this.bgm.loop = true
+    this.bgm.start(0,1.5)
     this.prepare()
     this.run()
   }
