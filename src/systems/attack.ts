@@ -9,14 +9,14 @@ export class AttackSystem implements System {
   cooldown: Timer | undefined;
   damage: number;
   once: boolean;
-  beforeAttack: ((target: GameObject) => void) | undefined;
+  beforeAttack: ((target: GameObject) => boolean) | undefined;
   afterAttack: ((target: GameObject) => void) | undefined;
 
   constructor(private game: Game, private object: GameObject, options: {
     targets: AttackTarget
     cooldown?: number
     damage: number
-    beforeAttack?: (target: GameObject) => void
+    beforeAttack?: (target: GameObject) => boolean
     afterAttack?: (target: GameObject) => void
   }) {
     this.targets = options.targets;
@@ -36,7 +36,11 @@ export class AttackSystem implements System {
       if (target.destoryed) continue;
       if (!target.collision(this.object)) continue;
       // because each target type are implemented with HealthSystem
-      if (this.beforeAttack) this.beforeAttack(target);
+
+      let ignore = false;
+      if (this.beforeAttack) ignore = !this.beforeAttack(target);
+      if (ignore) continue;
+      
       const success = target.getSystem(HealthSystem)!.damaged(this.damage);
       if (this.afterAttack && success) this.afterAttack(target);
     }
