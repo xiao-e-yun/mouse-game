@@ -3,10 +3,6 @@ import DefaultImage from "@bitmaps/default.webp";
 export const bitmapManager = new class BitmapManager {
   bitmaps = new Map<string, ImageBitmap>();
 
-  loadMany(urls: string[]) {
-    return Promise.all(urls.map(url => this.load(url)));
-  }
-
   load(url: string): Promise<ImageBitmap> {
     return new Promise(resolve => {
       if (this.bitmaps.has(url)) return resolve(this.bitmaps.get(url)!);
