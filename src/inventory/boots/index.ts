@@ -1,5 +1,5 @@
-import HealBoot from "./heal";
+import { HealBoot } from "./heal";
 
 export const inventoryBoots = [
     HealBoot,
-] as const;
+];

@@ -1,11 +1,13 @@
-import MoreRockExplosionItem from "./more_rock_explosion";
-import ReduceCooldown from "./reduce_cooldown";
-import ShieldItem from "./shield";
-import PowerItem from "./power";
+import { MoreRockExplosionItem } from "./more_rock_explosion";
+import { ReduceCooldownItem } from "./reduce_cooldown";
+import { ShieldItem } from "./shield";
+import { MorePowerItem } from "./power";
+import { BombItem } from "./bomb";
 
 export const inventoryItems = [
   MoreRockExplosionItem,
-  ReduceCooldown,
+  ReduceCooldownItem,
   ShieldItem,
-  PowerItem,
-] as const;
+  MorePowerItem,
+  BombItem,
+];

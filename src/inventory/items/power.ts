@@ -5,7 +5,7 @@ import { Game } from "@/main"
 
 import PowerIcon from "/inventory/power.png"
 
-export default new class MorePowerItem extends InventoryItem implements IInventoryItem {
+export class MorePowerItem extends InventoryItem implements IInventoryItem {
   id = "base.power"
   name = "More Power"
 

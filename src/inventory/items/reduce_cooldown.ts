@@ -5,7 +5,7 @@ import { Game } from "@/main"
 
 import CooldownIcon from "/inventory/cooldown.png"
 
-export default new class ReduceCooldownItem extends InventoryItem implements IInventoryItem {
+export class ReduceCooldownItem extends InventoryItem implements IInventoryItem {
   id = "base.cooldown"
   name = "Reduce Cooldown"
 

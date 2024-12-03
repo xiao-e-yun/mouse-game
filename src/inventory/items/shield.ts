@@ -9,7 +9,7 @@ import ShieldActiveImage from "/bitmaps/items/shield.png"
 import { GameObject } from "@/modules/object"
 import { Game } from "@/main"
 
-export default new class ShieldItem extends InventoryItem implements IInventoryItem {
+export class ShieldItem extends InventoryItem implements IInventoryItem {
   id = "base.shield"
   name = "Shield"
 

@@ -5,7 +5,7 @@ import { Game } from "@/main"
 
 import MoreRockExplosionIcon from "/inventory/more_rock_explosion.png"
 
-export default new class MoreRockExplosionItem extends InventoryItem implements IInventoryItem {
+export class MoreRockExplosionItem extends InventoryItem implements IInventoryItem {
   id = "base.more_rock_explosion"
   name = "More Rock EXPLOSION"
 

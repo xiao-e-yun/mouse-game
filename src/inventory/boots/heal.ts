@@ -5,7 +5,7 @@ import { Game } from "@/main"
 
 import HealHealthIcon from "/inventory/heal_health.png"
 
-export default new class HealBoot extends InventoryItem implements IInventoryItem {
+export class HealBoot extends InventoryItem implements IInventoryItem {
   id = "boots.heal_health"
   name = "Heal"
   getIcon() { return HealHealthIcon }

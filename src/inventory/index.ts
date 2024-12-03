@@ -5,5 +5,5 @@ export function getAllUpgrades() {
   return [
     ...inventoryItems,
     ...inventoryBoots,
-  ]
+  ].map(item => new item());
 }
