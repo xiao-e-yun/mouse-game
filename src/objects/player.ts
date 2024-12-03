@@ -6,6 +6,7 @@ import { AttackSystem, AttackTarget } from "../systems/attack";
 import { HealthSystem } from "../systems/health";
 import { InventorySystem } from "@/systems/inventory";
 import { SkillSystem } from "@/systems/skills";
+import { audioManager } from "@/modules/audios";
 
 export class Player extends GameObject {
   skillSystem: SkillSystem
@@ -25,7 +26,7 @@ export class Player extends GameObject {
 
     this.attackSystem = new AttackSystem(game, this, {
       targets: AttackTarget.Enemy, damage: 10, afterAttack: () => {
-        this.game.playAudioOnce("attack1");
+        audioManager.play("attack1");
         this.game.combat();
       }
     });

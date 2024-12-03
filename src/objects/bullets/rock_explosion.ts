@@ -4,6 +4,7 @@ import { Bullet } from "../bullet";
 import { Timer } from "@/modules/utils";
 import { SingleTexture } from "@/modules/texture";
 import { AttackSystem, AttackTarget } from "@/systems/attack";
+import { audioManager } from "@/modules/audios";
 
 export class RockExplosion extends Bullet {
   generate = new Timer(80);
@@ -14,7 +15,7 @@ export class RockExplosion extends Bullet {
       size: new Array(2).fill(96 + (level * 12)) as [number, number],
       texture: new SingleTexture(RockImage),
     });
-    this.game.playAudioOnce("attack2");
+    audioManager.play("attack2");
 
     this.generate.start();
     this.setSystems([new AttackSystem(game, this, {
