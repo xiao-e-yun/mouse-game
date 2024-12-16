@@ -77,6 +77,7 @@ export class GameObject {
 
 
 export class GameObjectView {
+  flipX = false;
   effects: [number, RenderObject[]][] = [];
   subObjects: Map<string, RenderObject[]> = new Map();
 
@@ -100,7 +101,8 @@ export class GameObjectView {
   getMain(): RenderObject {
     return new RenderObject(this.position, this.size, this.texture)
       .setIndex(this.zIndex)
-      .setFilter(this.filters);
+      .setFilter(this.filters)
+      .setFlipX(this.flipX);
   }
 
   addEffect(effects: RenderObject[], keepTime: number) {

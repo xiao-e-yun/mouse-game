@@ -48,7 +48,7 @@ import DefaultImage from '@bitmaps/default.webp'
 import BackgroundImage from '@bitmaps/background.png'
 // enemies
 import SlimeImage from '@bitmaps/enemies/slime.png'
-import DogImage from '@bitmaps/enemies/dog.webp'
+import DogImage from '@bitmaps/enemies/dog.png'
 import FireManImage from '@bitmaps/enemies/fireman.png'
 // bullet
 import FireBallImage from '@bitmaps/bullets/fireball.png'

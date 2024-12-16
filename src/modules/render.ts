@@ -70,7 +70,6 @@ export class Render {
   drawObjects(delta: number, viewport: ViewPort) {
     const objects = viewport.flush();
     const ctx = this.offscreenCtx;
-    let lastFilter = "";
     for (const object of objects) {
       object.texture.getBitmap(delta);
       const bitmap = object.texture.getBitmap(delta);
@@ -80,12 +79,19 @@ export class Render {
       const x = object.position[0] - object.size[0] / 2;
       const y = object.position[1] - object.size[1] / 2;
 
-      const filters = object.filters.join(" ");
-      if (lastFilter !== filters) ctx.filter = filters || "none";
-      this.offscreenCtx.drawImage(bitmap, bitmapX, bitmapY, bitmapW, bitmapH, x, y, object.size[0], object.size[1]);
-      lastFilter = filters;
+      ctx.save();
+      ctx.filter = object.filters.join(" ") || "none";
+
+      ctx.translate(x, y);
+      if (object.flipX) {
+        ctx.scale(-1, 1);
+        ctx.translate(-object.size[0], 0);
+      }
+
+      this.offscreenCtx.drawImage(bitmap, bitmapX, bitmapY, bitmapW, bitmapH, 0, 0, object.size[0], object.size[1]);
+
+      ctx.restore();
     }
-    if (lastFilter !== "") ctx.filter = "none";
   }
   drawBackground(delta: number, viewport: ViewPort) {
     const background = viewport.getBackground();
@@ -189,10 +195,12 @@ export class RenderObject {
     position: [number, number],
     size: [number, number],
     texture: Texture,
+    flipX: boolean = false
   ) {
     this.position = position;
     this.size = size;
     this.texture = texture;
+    this.flipX = flipX;
   }
 
   setPosition(position: [number, number]) {
@@ -221,6 +229,11 @@ export class RenderObject {
     return this;
   }
 
+  setFlipX(flipX: boolean) {
+    this.flipX = flipX;
+    return this;
+  }
+
   addFilter(filter: string) {
     this.filters.push(filter);
     return this;
@@ -237,6 +250,7 @@ export class RenderObject {
 
   texture: Texture;
   size: [number, number];
+  flipX: boolean = false;
   position: [number, number];
   zIndex: number = 0;
   filters: string[] = [];
